@@ -6,28 +6,20 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
-
 import com.sport.want.Language.LanguageChose;
 import com.sport.want.Language.LanguageListener;
 import com.sport.want.Language.SetLanguage;
@@ -48,12 +40,9 @@ import com.sport.want.Support.InternetImage;
 import com.sport.want.Support.Loading;
 import com.sport.want.Support.LoginDialog;
 import com.sport.want.Support.MarqueeTextView;
-import com.sport.want.Support.Screen;
 import com.sport.want.Support.Value;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,10 +60,8 @@ public class TestActivity extends AppCompatActivity implements ConnectListener, 
 
     private String TAG = "TestActivity";
     private ViewPager viewPager;
-    private Screen screen = new Screen(this);
     private List<PageView> pageList;
     private ViewPagerIndicator viewPagerIndicator;
-    private DisplayMetrics dm;
     private MarqueeTextView announcement;
     private String company, account, imformation;
     private TextView copyright, nowTime, login, textView1, textView2, textView3, textView4,
@@ -109,7 +96,6 @@ public class TestActivity extends AppCompatActivity implements ConnectListener, 
          **/
         getConnect.setListener(this);
         setLanguage.setListener(this);
-        dm = screen.size();
         if (languageSQL.getCount() == 0) {
             languageChose.show(setLanguage, languageSQL);
         } else {
@@ -131,6 +117,10 @@ public class TestActivity extends AppCompatActivity implements ConnectListener, 
 
         LinearLayout loginlinear = findViewById(R.id.loginlinear);  //登入鈕背景
         LinearLayout loginimage = findViewById(R.id.loginimage);    //登入鈕
+        LinearLayout announcelinear = findViewById(R.id.announcelinear);    //最新訊息按鈕
+        LinearLayout travellinear = findViewById(R.id.travellinear);    //旅遊資訊按鈕
+        LinearLayout watchlinear = findViewById(R.id.watchlinear);  //線上影音按鈕
+        LinearLayout newslinear = findViewById(R.id.newslinear);    //即時新聞按鈕
         imageViewtitle = findViewById(R.id.imageView1); //LOGO
         announcement = findViewById(R.id.marqueeTextView);   //公告字串
         login = findViewById(R.id.login);
@@ -147,7 +137,6 @@ public class TestActivity extends AppCompatActivity implements ConnectListener, 
         copyright = findViewById(R.id.copyright);
         nowTime = findViewById(R.id.nowTime);
 
-        new Thread(announce).start();
         setLanguage.setListener(this);
         setLanguage.isSet();
 
@@ -165,6 +154,22 @@ public class TestActivity extends AppCompatActivity implements ConnectListener, 
         announcement.setOnClickListener(view -> showhowto());
         loginlinear.setOnClickListener(view -> loginDialog.show(loading, loginSQL, connected, getConnect));
         loginimage.setOnClickListener(view -> loginDialog.show(loading, loginSQL, connected, getConnect));
+        announcelinear.setOnClickListener(view -> {
+            String url = "http://www.shareno1.com/category/%e5%8a%a8%e6%bc%ab";
+            goWebview(textView5, url);
+        });
+        travellinear.setOnClickListener(view -> {
+            String url = "https://www.w3schools.com/html/default.asp";
+            goWebview(textView6, url);
+        });
+        watchlinear.setOnClickListener(view -> {
+            String url = "https://www.dandanzan.com";
+            goWebview(textView7, url);
+        });
+        newslinear.setOnClickListener(view -> {
+            String url = "https://news.google.com";
+            goWebview(textView8, url);
+        });
 
         listView();
     }
@@ -322,6 +327,18 @@ public class TestActivity extends AppCompatActivity implements ConnectListener, 
         finish();
     }
 
+    private void goWebview(TextView textView, String url){
+        company = "";
+        account = "";
+        Intent intent = new Intent(this, WebviewActivity.class);
+        intent.putExtra("title", textView.getText());
+        intent.putExtra("url", url);
+        intent.putExtra("company", company);
+        intent.putExtra("account", account);
+        startActivity(intent);
+        finish();
+    }
+
     public boolean onKeyDown(int key, KeyEvent event) {
         switch (key) {
             case KeyEvent.KEYCODE_SEARCH:
@@ -437,6 +454,14 @@ public class TestActivity extends AppCompatActivity implements ConnectListener, 
             textView6.setText("旅遊資訊");
             textView7.setText("線上影音");
             textView8.setText("即時新聞");
+            textView1.setTextSize(14);
+            textView2.setTextSize(14);
+            textView3.setTextSize(14);
+            textView4.setTextSize(14);
+            textView5.setTextSize(16);
+            textView6.setTextSize(16);
+            textView7.setTextSize(16);
+            textView8.setTextSize(16);
             copyright.setText(Value.copyright_text + Value.ver);
             nowTime.setText(Value.updatestring + Value.updateTime);
         } else if (Value.language_flag == 2) {
@@ -449,9 +474,18 @@ public class TestActivity extends AppCompatActivity implements ConnectListener, 
             textView6.setText("旅游资讯");
             textView7.setText("线上影音");
             textView8.setText("即时新闻");
+            textView1.setTextSize(14);
+            textView2.setTextSize(14);
+            textView3.setTextSize(14);
+            textView4.setTextSize(14);
+            textView5.setTextSize(16);
+            textView6.setTextSize(16);
+            textView7.setTextSize(16);
+            textView8.setTextSize(16);
             copyright.setText(Value.copyright_text + Value.ver);
             nowTime.setText(Value.updatestring + Value.updateTime);
         }
+        new Thread(announce).start();
     }
 
     @Override

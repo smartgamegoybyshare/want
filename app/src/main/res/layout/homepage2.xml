@@ -392,6 +392,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/announcelinear"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
@@ -438,6 +439,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/travellinear"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
@@ -492,6 +494,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/watchlinear"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
@@ -538,6 +541,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/newslinear"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"

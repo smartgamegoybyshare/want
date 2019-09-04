@@ -9,12 +9,12 @@ import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -40,7 +40,6 @@ import com.sport.want.R;
 import com.sport.want.SQL.LastLoginSQL;
 import com.sport.want.Support.InternetImage;
 import com.sport.want.Support.MarqueeTextView;
-import com.sport.want.Support.Screen;
 import com.sport.want.Support.Value;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -102,6 +101,10 @@ public class LoginMainActivity extends AppCompatActivity implements LanguageList
     private void showview() {
         setContentView(R.layout.homepage2);
 
+        LinearLayout announcelinear = findViewById(R.id.announcelinear);    //最新訊息按鈕
+        LinearLayout travellinear = findViewById(R.id.travellinear);    //旅遊資訊按鈕
+        LinearLayout watchlinear = findViewById(R.id.watchlinear);  //線上影音按鈕
+        LinearLayout newslinear = findViewById(R.id.newslinear);    //即時新聞按鈕
         imageViewtitle = findViewById(R.id.imageView1);
         announcement = findViewById(R.id.marqueeTextView);   //公告字串
         accounttxt = findViewById(R.id.accounttxt); //登入帳號
@@ -157,6 +160,22 @@ public class LoginMainActivity extends AppCompatActivity implements LanguageList
         linkicon.setOnClickListener(view -> linkset());
         modifyicon.setOnClickListener(view -> modifypassword());
         formicon.setOnClickListener(view -> nextPage());
+        announcelinear.setOnClickListener(view -> {
+            String url = "http://www.shareno1.com/category/%e5%8a%a8%e6%bc%ab";
+            goWebview(textView5, url);
+        });
+        travellinear.setOnClickListener(view -> {
+            String url = "https://www.w3schools.com/html/default.asp";
+            goWebview(textView6, url);
+        });
+        watchlinear.setOnClickListener(view -> {
+            String url = "https://www.dandanzan.com";
+            goWebview(textView7, url);
+        });
+        newslinear.setOnClickListener(view -> {
+            String url = "https://news.google.com";
+            goWebview(textView8, url);
+        });
 
         Log.e(TAG, "getDateTime() = " + getDateTime());
         Log.e(TAG, "recordTime() = " + recordTime());
@@ -333,6 +352,16 @@ public class LoginMainActivity extends AppCompatActivity implements LanguageList
         finish();
     }
 
+    private void goWebview(TextView textView, String url){
+        Intent intent = new Intent(this, WebviewActivity.class);
+        intent.putExtra("title", textView.getText());
+        intent.putExtra("url", url);
+        intent.putExtra("company", company);
+        intent.putExtra("account", account);
+        startActivity(intent);
+        finish();
+    }
+
     public boolean onKeyDown(int key, KeyEvent event) {
         switch (key) {
             case KeyEvent.KEYCODE_SEARCH:
@@ -463,6 +492,14 @@ public class LoginMainActivity extends AppCompatActivity implements LanguageList
             textView6.setText("旅遊資訊");
             textView7.setText("線上影音");
             textView8.setText("即時新聞");
+            textView1.setTextSize(14);
+            textView2.setTextSize(14);
+            textView3.setTextSize(14);
+            textView4.setTextSize(14);
+            textView5.setTextSize(16);
+            textView6.setTextSize(16);
+            textView7.setTextSize(16);
+            textView8.setTextSize(16);
             copyright.setText(Value.copyright_text + Value.ver);
             nowTime.setText(Value.updatestring + Value.updateTime);
         } else if (Value.language_flag == 2) {
@@ -477,6 +514,14 @@ public class LoginMainActivity extends AppCompatActivity implements LanguageList
             textView6.setText("旅游资讯");
             textView7.setText("线上影音");
             textView8.setText("即时新闻");
+            textView1.setTextSize(14);
+            textView2.setTextSize(14);
+            textView3.setTextSize(14);
+            textView4.setTextSize(14);
+            textView5.setTextSize(16);
+            textView6.setTextSize(16);
+            textView7.setTextSize(16);
+            textView8.setTextSize(16);
             copyright.setText(Value.copyright_text + Value.ver);
             nowTime.setText(Value.updatestring + Value.updateTime);
         }
