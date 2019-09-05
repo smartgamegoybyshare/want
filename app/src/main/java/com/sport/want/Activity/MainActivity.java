@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements ConnectListener, 
     private GetConnect getConnect = new GetConnect();
     private LoginSQL loginSQL = new LoginSQL(this);
     private LanguageSQL languageSQL = new LanguageSQL(this);
-    //private Button login;
     private LanguageChose languageChose = new LanguageChose(this);
     private InternetImage internetImage = new InternetImage();
     private Handler titleHandler = new Handler(), announceHandler = new Handler();
@@ -141,11 +140,11 @@ public class MainActivity extends AppCompatActivity implements ConnectListener, 
         setLanguage.isSet();
 
         Runnable gettitle = () -> {
-            String imageUri = "https://dl.kz168168.com/img/android-logo01.png";
+            String imageUri = "https://dl.kz168168.com/img/omen-logo01.png";
             bitmap_title = internetImage.fetchImage(imageUri);
             titleHandler.post(() -> {
-                //imageViewtitle.setImageBitmap(bitmap_title);
-                imageViewtitle.setImageDrawable(this.getResources().getDrawable((R.drawable.logo01)));
+                imageViewtitle.setImageBitmap(bitmap_title);
+                //imageViewtitle.setImageDrawable(this.getResources().getDrawable((R.drawable.logo01)));
                 imageViewtitle.setScaleType(ImageView.ScaleType.CENTER_CROP);
             });
         };
@@ -158,16 +157,17 @@ public class MainActivity extends AppCompatActivity implements ConnectListener, 
 
         });
         travellinear.setOnClickListener(view -> {   //旅遊資訊
-            /*String url = "https://washpower.ga/";
-            goWebview(textView6, url);*/
+            String url = "https://washpower.ga/";
+            goWebview(textView6, url);
         });
         watchlinear.setOnClickListener(view -> {    //線上影音
-            /*String url = "https://ineedwater.ga/";
-            goWebview(textView7, url);*/
+            //https://aniwantsmart.com/
+            String url = "https://freetoshare.ga";  //https://freetoshare.ga
+            goWebview(textView7, url);
         });
         newslinear.setOnClickListener(view -> { //即時新聞
-            /*String url = "https://freetoshare.ga";
-            goWebview(textView8, url);*/
+            String url = "https://ineedwater.ga/";
+            goWebview(textView8, url);
         });
 
         listView();
@@ -499,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements ConnectListener, 
                 loading.dismiss();
                 Value.check_user = responseJson;
                 if (checkBox.isChecked()) {
-                    if(!company.matches("api01") && !account.matches("demo")) {
+                    if(!account.matches("demo")) {
                         if (loginSQL.getCount() != 0) {
                             loginSQL.deleteAll();
                             loginSQL.insert(company, account, password);

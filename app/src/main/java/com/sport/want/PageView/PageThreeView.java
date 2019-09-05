@@ -29,11 +29,11 @@ public class PageThreeView extends PageView {
         Runnable getimage = () -> {
             String imageUri = "";
             if (Value.language_flag == 0) {  //flag = 0 => Eng, flag = 1 => Cht, flag = 2 => Chs
-                imageUri = "https://dl.kz168168.com/img/android-slider03_en.png";
+                imageUri = "https://dl.kz168168.com/img/omen-slider03_en.png";
             }else if(Value.language_flag == 1){
-                imageUri = "https://dl.kz168168.com/img/android-slider03_tw.png";
+                imageUri = "https://dl.kz168168.com/img/omen-slider03_tw.png";
             }else if(Value.language_flag == 2){
-                imageUri = "https://dl.kz168168.com/img/android-slider03_cn.png";
+                imageUri = "https://dl.kz168168.com/img/omen-slider03_cn.png";
             }
             preview_bitmap = internetImage.fetchImage(imageUri);
             handler.post(() -> imageView.setImageBitmap(preview_bitmap));

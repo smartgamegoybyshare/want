@@ -141,11 +141,11 @@ public class LoginMainActivity extends AppCompatActivity implements LanguageList
         formicon.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
         Runnable gettitle = () -> {
-            String imageUri = "https://dl.kz168168.com/img/android-logo01.png";
+            String imageUri = "https://dl.kz168168.com/img/omen-logo01.png";
             bitmap_title = internetImage.fetchImage(imageUri);
             titleHandler.post(() -> {
-                //imageViewtitle.setImageBitmap(bitmap_title);
-                imageViewtitle.setImageDrawable(this.getResources().getDrawable((R.drawable.logo01)));
+                imageViewtitle.setImageBitmap(bitmap_title);
+                //imageViewtitle.setImageDrawable(this.getResources().getDrawable((R.drawable.logo01)));
                 imageViewtitle.setScaleType(ImageView.ScaleType.CENTER_CROP);
             });
         };
@@ -164,16 +164,16 @@ public class LoginMainActivity extends AppCompatActivity implements LanguageList
 
         });
         travellinear.setOnClickListener(view -> {   //旅遊資訊
-            /*String url = "https://washpower.ga/";
-            goWebview(textView6, url);*/
+            String url = "https://washpower.ga/";
+            goWebview(textView6, url);
         });
         watchlinear.setOnClickListener(view -> {    //線上影音
-            /*String url = "https://ineedwater.ga/";
-            goWebview(textView7, url);*/
+            String url = "https://freetoshare.ga";
+            goWebview(textView7, url);
         });
         newslinear.setOnClickListener(view -> { //即時新聞
-            /*String url = "https://freetoshare.ga";
-            goWebview(textView8, url);*/
+            String url = "https://ineedwater.ga/";
+            goWebview(textView8, url);
         });
 
         Log.e(TAG, "getDateTime() = " + getDateTime());

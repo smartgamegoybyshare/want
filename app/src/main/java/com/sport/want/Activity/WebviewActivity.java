@@ -1,29 +1,44 @@
 package com.sport.want.Activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.webkit.DownloadListener;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.sport.want.Language.LanguageListener;
 import com.sport.want.Language.SetLanguage;
 import com.sport.want.R;
 import com.sport.want.Support.InternetImage;
+import com.sport.want.Support.Loading;
 import com.sport.want.Support.Value;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,7 +50,7 @@ public class WebviewActivity extends AppCompatActivity implements LanguageListen
     private String TAG = "WebviewActivity";
     private SetLanguage setLanguage = new SetLanguage();
     private TextView title, back, copyright, nowTime;
-    private LinearLayout lineargif;
+    private LinearLayout lineargif, backgroundlinear;
     private String title_text, geturl, company, account;
     private GifImageView gifImageView1;
     private Bitmap preview_bitmap;
@@ -44,6 +59,8 @@ public class WebviewActivity extends AppCompatActivity implements LanguageListen
     private boolean swipe = false;
     private InternetImage internetImage = new InternetImage();
     private Handler handler = new Handler(), refreshHandler = new Handler();
+    private Loading loading = new Loading(this);
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +68,13 @@ public class WebviewActivity extends AppCompatActivity implements LanguageListen
         Log.d(TAG, "onCreate");
         //隱藏標題欄
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-
+        if (Value.language_flag == 0) {  //flag = 0 => Eng, flag = 1 => Cht, flag = 2 => Chs
+            loading.show("Loading...");
+        } else if (Value.language_flag == 1) {
+            loading.show("載入中...");
+        } else if (Value.language_flag == 2) {
+            loading.show("加載中...");
+        }
         get_Intent();
     }
 
@@ -87,6 +110,7 @@ public class WebviewActivity extends AppCompatActivity implements LanguageListen
     private void watchView() {
         setContentView(R.layout.watchweb);
 
+        backgroundlinear = findViewById(R.id.backgroundlinear);
         lineargif = findViewById(R.id.linear_gif);
         swipeRefreshLayout = findViewById(R.id.swiperefresh);
         title = findViewById(R.id.textView);   //對帳通知
@@ -142,61 +166,118 @@ public class WebviewActivity extends AppCompatActivity implements LanguageListen
         webview.getSettings().setAllowFileAccessFromFileURLs(true);
         webview.getSettings().setBlockNetworkImage(false);//不阻塞网络图片
         webview.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        webview.setDownloadListener((url, userAgent1, contentDisposition, mimeType, contentLength) -> {
-            // TODO: 处理下载事件
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.addCategory(Intent.CATEGORY_BROWSABLE);
-            intent.setData(Uri.parse(url));
-            startActivity(intent);
+        webview.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent,
+                                        String contentDisposition, String mimetype,
+                                        long contentLength) {
+                requeststorage(url);
+            }
         });
         webview.setWebViewClient(new WebViewClient() {
-            /*@SuppressLint("NewApi")
-            @Override
-            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request){
-                if (request != null && request.getUrl() != null) {
-                    String scheme = request.getUrl().getScheme().trim();
-                    if (scheme.equalsIgnoreCase("http") || scheme.equalsIgnoreCase("https")) {
-                        return super.shouldInterceptRequest(view, new WebResourceRequest() {
-                            @Override
-                            public Uri getUrl() {
-                                return Uri.parse(injectIsParams(request.getUrl().toString()));
-                            }
-
-                            @SuppressLint("NewApi")
-                            @Override
-                            public boolean isForMainFrame() {
-                                return request.isForMainFrame();
-                            }
-
-                            @SuppressLint("NewApi")
-                            @Override
-                            public boolean hasGesture() {
-                                return request.hasGesture();
-                            }
-
-                            @SuppressLint("NewApi")
-                            @Override
-                            public String getMethod() {
-                                return request.getMethod();
-                            }
-
-                            @SuppressLint("NewApi")
-                            @Override
-                            public Map<String, String> getRequestHeaders() {
-                                return request.getRequestHeaders();
-                            }
-                        });
-                    }
-                }
-                return super.shouldInterceptRequest(view, request);
-            }*/
-
             public boolean shouldOverrideUrlLoading(WebView view, String url) { //  重寫此方法表明點選網頁裡面的連結還是在當前的webview裡跳轉,不跳到瀏覽器那邊
+                Log.e(TAG, "點選新連結");
+                if (Value.language_flag == 0) {  //flag = 0 => Eng, flag = 1 => Cht, flag = 2 => Chs
+                    loading.show("Loading...");
+                } else if (Value.language_flag == 1) {
+                    loading.show("載入中...");
+                } else if (Value.language_flag == 2) {
+                    loading.show("加載中...");
+                }
                 view.loadUrl(url);
                 return true;
             }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                Log.e(TAG, "加載中");
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                setTitle(view.getTitle());
+                super.onPageFinished(view, url);
+                loading.dismiss();
+                Log.e(TAG, "加載完畢");
+            }
         });
+        webview.setWebChromeClient(new WebChromeClient(){
+
+            private View mCustomView;
+            private WebChromeClient.CustomViewCallback mCustomViewCallback;
+            private int mOriginalOrientation;
+            private int mOriginalSystemUiVisibility;
+
+            public Bitmap getDefaultVideoPoster() {
+                if (mCustomView == null) {
+                    return null;
+                }
+                return BitmapFactory.decodeResource(getApplicationContext().getResources(), 0);
+            }
+
+            public void onHideCustomView() {
+                ((FrameLayout)getWindow().getDecorView()).removeView(this.mCustomView);
+                this.mCustomView = null;
+                getWindow().getDecorView().setSystemUiVisibility(this.mOriginalSystemUiVisibility);
+                setRequestedOrientation(this.mOriginalOrientation);
+                this.mCustomViewCallback.onCustomViewHidden();
+                this.mCustomViewCallback = null;
+            }
+
+            public void onShowCustomView(View paramView, WebChromeClient.CustomViewCallback paramCustomViewCallback) {
+                if (this.mCustomView != null)
+                {
+                    onHideCustomView();
+                    return;
+                }
+                this.mCustomView = paramView;
+                this.mOriginalSystemUiVisibility = getWindow().getDecorView().getSystemUiVisibility();
+                this.mOriginalOrientation = getRequestedOrientation();
+                this.mCustomViewCallback = paramCustomViewCallback;
+                ((FrameLayout)getWindow().getDecorView()).addView(this.mCustomView, new FrameLayout.LayoutParams(-1, -1));
+                getWindow().getDecorView().setSystemUiVisibility(3846);
+            }
+        });
+
         webview.loadUrl(geturl);
+    }
+
+    private void downloadManager(String url){
+        Log.e(TAG, "url = " + url);
+        String fileName = url.substring(url.lastIndexOf("/") + 1);
+        Log.e(TAG, "fileName = " + fileName);
+        DownloadManager.Request request = new DownloadManager.Request(
+                Uri.parse(url));
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); //Notify client once download is completed!
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        if (dm != null) {
+            dm.enqueue(request);
+        }
+        Toast.makeText(getApplicationContext(), "即將開始下載",
+                //To notify the Client that the file is being downloaded
+                Toast.LENGTH_LONG).show();
+    }
+
+    private void requeststorage(String url) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                //未取得權限，向使用者要求允許權限
+                ActivityCompat.requestPermissions(this,
+                        new String[]{
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        },
+                        REQUEST_EXTERNAL_STORAGE);
+            } else {
+                downloadManager(url);
+                //已有權限，可進行工作
+            }
+        } else {
+            downloadManager(url);
+        }
     }
 
     private String getDateTime() {
@@ -286,12 +367,18 @@ public class WebviewActivity extends AppCompatActivity implements LanguageListen
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // land do nothing is ok
+            title.setVisibility(View.GONE);
+            back.setVisibility(View.GONE);
+            backgroundlinear.setVisibility(View.GONE);
             lineargif.setVisibility(View.GONE);
             gifImageView1.setVisibility(View.GONE);
             copyright.setVisibility(View.GONE);
             nowTime.setVisibility(View.GONE);
         } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             // port do nothing is ok
+            title.setVisibility(View.VISIBLE);
+            back.setVisibility(View.VISIBLE);
+            backgroundlinear.setVisibility(View.VISIBLE);
             lineargif.setVisibility(View.VISIBLE);
             gifImageView1.setVisibility(View.VISIBLE);
             copyright.setVisibility(View.VISIBLE);

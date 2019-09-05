@@ -29,11 +29,11 @@ public class PageFourView_Logout extends PageView {
         Runnable getimage = () -> {
             String imageUri = "";
             if (Value.language_flag == 0) {  //flag = 0 => Eng, flag = 1 => Cht, flag = 2 => Chs
-                imageUri = "https://dl.kz168168.com/img/android-slider04_en.png";
+                imageUri = "https://dl.kz168168.com/img/omen-slider04_en.png";
             }else if(Value.language_flag == 1){
-                imageUri = "https://dl.kz168168.com/img/android-slider04_tw.png";
+                imageUri = "https://dl.kz168168.com/img/omen-slider04_tw.png";
             }else if(Value.language_flag == 2){
-                imageUri = "https://dl.kz168168.com/img/android-slider04_cn.png";
+                imageUri = "https://dl.kz168168.com/img/omen-slider04_cn.png";
             }
             preview_bitmap = internetImage.fetchImage(imageUri);
             handler.post(() -> imageView.setImageBitmap(preview_bitmap));
