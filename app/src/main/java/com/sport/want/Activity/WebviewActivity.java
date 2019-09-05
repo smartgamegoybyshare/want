@@ -209,7 +209,7 @@ public class WebviewActivity extends AppCompatActivity implements LanguageListen
 
     private void homePage() {
         if (company.matches("") && account.matches("")) {
-            Intent intent = new Intent(this, TestActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
         } else {

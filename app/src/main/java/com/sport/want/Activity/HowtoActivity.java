@@ -103,7 +103,7 @@ public class HowtoActivity extends AppCompatActivity implements LanguageListener
     }
 
     private void homePage(){
-        Intent intent = new Intent(this, TestActivity.class);   //MainActivity
+        Intent intent = new Intent(this, MainActivity.class);   //MainActivity
         startActivity(intent);
         finish();
     }

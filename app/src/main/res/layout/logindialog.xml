@@ -18,6 +18,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="23sp"
+            android:layout_height="23sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            app:srcCompat="@drawable/closeicon" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -12,6 +12,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -64,6 +65,7 @@ public class LoginDialog {
         CheckBox checkBox = v.findViewById(R.id.checkBox);    //記住我的登入資訊
         Button login = v.findViewById(R.id.button1);   //登入按鈕
         Button tryin = v.findViewById(R.id.button2);   //試用按鈕
+        ImageView imageView = v.findViewById(R.id.imageView);
 
         if (Value.language_flag == 0) {
             editText1.setHint("Sub Account");
@@ -97,6 +99,8 @@ public class LoginDialog {
             editText3.setText(dataList.get(2));
             checkBox.setChecked(true);
         }
+
+        imageView.setOnClickListener(view -> progressDialog.dismiss());
 
         login.setOnClickListener(view -> {
             company = editText1.getText().toString().trim();
@@ -156,6 +160,21 @@ public class LoginDialog {
                 progressDialog.dismiss();
                 connected.setConnect(company, account, password, getConnect, checkBox);
             }
+        });
+
+        tryin.setOnClickListener(view -> {
+            company = "api01";
+            account = "demo";
+            password = "demo";
+            if (Value.language_flag == 0) {  //flag = 0 => Eng, flag = 1 => Cht, flag = 2 => Chs
+                loading.show("Logining...");
+            } else if (Value.language_flag == 1) {
+                loading.show("登入中...");
+            } else if (Value.language_flag == 2) {
+                loading.show("登陆中...");
+            }
+            progressDialog.dismiss();
+            connected.setConnect(company, account, password, getConnect, checkBox);
         });
 
         if (Height > Width) {

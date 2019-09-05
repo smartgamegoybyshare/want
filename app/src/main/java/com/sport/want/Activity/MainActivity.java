@@ -56,9 +56,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-public class TestActivity extends AppCompatActivity implements ConnectListener, LanguageListener {
+public class MainActivity extends AppCompatActivity implements ConnectListener, LanguageListener {
 
-    private String TAG = "TestActivity";
+    private String TAG = "MainActivity";
     private ViewPager viewPager;
     private List<PageView> pageList;
     private ViewPagerIndicator viewPagerIndicator;
@@ -113,7 +113,7 @@ public class TestActivity extends AppCompatActivity implements ConnectListener, 
     }
 
     private void showview() {
-        setContentView(R.layout.test);
+        setContentView(R.layout.homepage);
 
         LinearLayout loginlinear = findViewById(R.id.loginlinear);  //登入鈕背景
         LinearLayout loginimage = findViewById(R.id.loginimage);    //登入鈕
@@ -154,21 +154,20 @@ public class TestActivity extends AppCompatActivity implements ConnectListener, 
         announcement.setOnClickListener(view -> showhowto());
         loginlinear.setOnClickListener(view -> loginDialog.show(loading, loginSQL, connected, getConnect));
         loginimage.setOnClickListener(view -> loginDialog.show(loading, loginSQL, connected, getConnect));
-        announcelinear.setOnClickListener(view -> {
-            String url = "http://www.shareno1.com/category/%e5%8a%a8%e6%bc%ab";
-            goWebview(textView5, url);
+        announcelinear.setOnClickListener(view -> { //最新訊息
+
         });
-        travellinear.setOnClickListener(view -> {
-            String url = "https://www.w3schools.com/html/default.asp";
-            goWebview(textView6, url);
+        travellinear.setOnClickListener(view -> {   //旅遊資訊
+            /*String url = "https://washpower.ga/";
+            goWebview(textView6, url);*/
         });
-        watchlinear.setOnClickListener(view -> {
-            String url = "https://www.dandanzan.com";
-            goWebview(textView7, url);
+        watchlinear.setOnClickListener(view -> {    //線上影音
+            /*String url = "https://ineedwater.ga/";
+            goWebview(textView7, url);*/
         });
-        newslinear.setOnClickListener(view -> {
-            String url = "https://news.google.com";
-            goWebview(textView8, url);
+        newslinear.setOnClickListener(view -> { //即時新聞
+            /*String url = "https://freetoshare.ga";
+            goWebview(textView8, url);*/
         });
 
         listView();
@@ -500,11 +499,13 @@ public class TestActivity extends AppCompatActivity implements ConnectListener, 
                 loading.dismiss();
                 Value.check_user = responseJson;
                 if (checkBox.isChecked()) {
-                    if (loginSQL.getCount() != 0) {
-                        loginSQL.deleteAll();
-                        loginSQL.insert(company, account, password);
-                    } else {
-                        loginSQL.insert(company, account, password);
+                    if(!company.matches("api01") && !account.matches("demo")) {
+                        if (loginSQL.getCount() != 0) {
+                            loginSQL.deleteAll();
+                            loginSQL.insert(company, account, password);
+                        } else {
+                            loginSQL.insert(company, account, password);
+                        }
                     }
                 } else {
                     loginSQL.deleteAll();

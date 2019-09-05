@@ -316,7 +316,7 @@ public class FormActivity extends AppCompatActivity implements UserdataListener,
                     .setIcon(R.drawable.app_icon_mini)
                     .setMessage("Do you want to Logout?")
                     .setPositiveButton("Yes", (dialog, which) -> {
-                        Intent intent = new Intent(this, TestActivity.class);   //MainActivity
+                        Intent intent = new Intent(this, MainActivity.class);   //MainActivity
                         Value.get_record = null;
                         Value.record = null;
                         startActivity(intent);
@@ -331,7 +331,7 @@ public class FormActivity extends AppCompatActivity implements UserdataListener,
                     .setIcon(R.drawable.app_icon_mini)
                     .setMessage("確定要登出?")
                     .setPositiveButton("確定", (dialog, which) -> {
-                        Intent intent = new Intent(this, TestActivity.class);   //MainActivity
+                        Intent intent = new Intent(this, MainActivity.class);   //MainActivity
                         Value.get_record = null;
                         Value.record = null;
                         startActivity(intent);
@@ -346,7 +346,7 @@ public class FormActivity extends AppCompatActivity implements UserdataListener,
                     .setIcon(R.drawable.app_icon_mini)
                     .setMessage("确定要登出?")
                     .setPositiveButton("确定", (dialog, which) -> {
-                        Intent intent = new Intent(this, TestActivity.class);   //MainActivity
+                        Intent intent = new Intent(this, MainActivity.class);   //MainActivity
                         Value.get_record = null;
                         Value.record = null;
                         startActivity(intent);
